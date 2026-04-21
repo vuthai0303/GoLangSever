@@ -1,0 +1,121 @@
+enum AccountType {
+  CASH
+  BANK
+  E_WALLET
+  RECEIVABLE
+  PAYABLE
+  INVESTMENT
+  CREDIT
+}
+
+enum CategoryType {
+  EXPENSE
+  INCOME
+  TRANSFER
+}
+
+type Account {
+  id: ID!
+  userId: Int!
+  name: String!
+  type: AccountType!
+  defaultMoney: Float!
+  amount: Float!
+  iconId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Category {
+  id: ID!
+  userId: Int!
+  name: String!
+  categoriesType: CategoryType!
+  iconId: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Transaction {
+  id: ID!
+  userId: Int!
+  accountName: String!
+  categoryName: String!
+  amount: Float!
+  notes: String
+  date: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MonthlyExpenseAnalysis {
+  id: ID!
+  userId: Int!
+  spending: Float!
+  income: Float!
+  month: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input NewAccount {
+  name: String!
+  type: AccountType!
+  defaultMoney: Float!
+  iconId: String
+}
+
+input UpdateAccount {
+  name: String
+  type: AccountType
+  defaultMoney: Float
+  iconId: String
+}
+
+input NewCategory {
+  name: String!
+  categoriesType: CategoryType!
+  iconId: String
+}
+
+input UpdateCategory {
+  name: String
+  iconId: String
+}
+
+input NewTransaction {
+  accountId: ID!
+  categoryId: ID!
+  amount: Float!
+  notes: String
+  date: String
+}
+
+input UpdateTransaction {
+  accountId: ID
+  categoryId: ID
+  amount: Float
+  notes: String
+  date: String
+}
+
+type Query {
+  accounts: [Account!]!
+  categories: [Category!]!
+  transactions: [Transaction!]!
+  monthlyExpenseAnalysis(month: String): [MonthlyExpenseAnalysis!]!
+}
+
+type Mutation {
+  createAccount(input: NewAccount!): Account!
+  updateAccount(id: ID!, input: UpdateAccount!): Account!
+  deleteAccount(id: ID!): Boolean!
+  
+  createCategory(input: NewCategory!): Category!
+  updateCategory(id: ID!, input: UpdateCategory!): Category!
+  deleteCategory(id: ID!): Boolean!
+  
+  createTransaction(input: NewTransaction!): Transaction!
+  updateTransaction(id: ID!, input: UpdateTransaction!): Transaction!
+  deleteTransaction(id: ID!): Boolean!
+}

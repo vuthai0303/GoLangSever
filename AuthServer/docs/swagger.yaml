@@ -1,0 +1,176 @@
+definitions:
+  main.CredentialsReq:
+    properties:
+      password:
+        example: password123
+        type: string
+      username:
+        example: admin123
+        type: string
+    type: object
+  main.UpdatePasswordReq:
+    properties:
+      password:
+        example: newpass123
+        type: string
+    type: object
+  main.User:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_locked:
+        type: boolean
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: REST API for AuthServer
+  title: AuthServer API
+  version: "1.0"
+paths:
+  /api/auth/lock:
+    post:
+      description: Lock the current user account preventing further access
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Lock Account
+      tags:
+      - User
+  /api/auth/refresh:
+    post:
+      description: Obtain a new JWT token using the current active one
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Refresh Token
+      tags:
+      - Authentication
+  /api/auth/signin:
+    post:
+      consumes:
+      - application/json
+      description: Login with username and password to get JWT token
+      parameters:
+      - description: User credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.CredentialsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login
+      tags:
+      - Authentication
+  /api/auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with username and password
+      parameters:
+      - description: User credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.CredentialsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new user
+      tags:
+      - Authentication
+  /api/auth/user:
+    delete:
+      description: Delete the current user account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete User
+      tags:
+      - User
+    get:
+      description: Get current user information base on JWT
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.User'
+      security:
+      - BearerAuth: []
+      summary: Get User Info
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update the current user password
+      parameters:
+      - description: New password
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.UpdatePasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update User Password
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
